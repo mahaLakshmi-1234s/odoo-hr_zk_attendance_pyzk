@@ -161,7 +161,7 @@ class ZkMachine(models.Model):
                         if info.zk_after_date == False:
                             tmp_zk_after_date = datetime.strptime('2000-01-01',"%Y-%m-%d")
                         else:
-                            tmp_zk_after_date = datetime.strptime(info.zk_after_date,'%Y-%m-%d %H:%M:%S')
+                            tmp_zk_after_date = info.zk_after_date
                         if atten_time != False and atten_time > tmp_zk_after_date:
                             local_tz = pytz.timezone(
                                 self.env.user.partner_id.tz or 'GMT')
