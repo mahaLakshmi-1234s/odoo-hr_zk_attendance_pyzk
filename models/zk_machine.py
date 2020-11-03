@@ -16,23 +16,21 @@
 #
 ###################################################################################
 import pytz
-import sys
 from datetime import datetime
 import logging
-import binascii
 import os
 import platform
 import subprocess
-import time
 
 from odoo import api, fields, models
 from odoo import _
 from odoo.exceptions import UserError, ValidationError
 _logger = logging.getLogger(__name__)
 try:
-    from zk import ZK, const
+    from zk import ZK
 except ImportError:
     _logger.error("Unable to import pyzk library. Try 'pip3 install pyzk'.")
+
 
 class HrAttendance(models.Model):
     _inherit = 'hr.attendance'
@@ -60,18 +58,6 @@ class ZkMachine(models.Model):
             _logger.info("zk.exception.ZKNetworkError: can't reach device.")
             raise UserError("Connection To Device cannot be established.")
             return False
-
-    # @api.multi
-    # def device_connect(self, zkobj):
-    #     for i in range(10):
-    #         try:
-    #             conn =  zkobj.connect()
-    #             return conn
-    #         except:
-    #             _logger.info("zk.exception.ZKNetworkError: can't reach device.")
-    #             conn = False
-    #     return False
-
 
     @api.multi
     def try_connection(self):
@@ -221,4 +207,3 @@ class ZkMachine(models.Model):
                     conn.disconnect
             else:
                 raise UserError(_('Unable to connect to Attendance Device. Please use Test Connection button to verify.'))
-
