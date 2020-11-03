@@ -42,7 +42,8 @@ class HrAttendance(models.Model):
 
 class ZkMachine(models.Model):
     _name = 'zk.machine'
-    
+    _description = 'ZK Machine'
+
     name = fields.Char(string='Machine IP', required=True)
     port_no = fields.Integer(string='Port No', required=True, default="4370")
     address_id = fields.Many2one('res.partner', string='Working Address')
@@ -81,14 +82,14 @@ class ZkMachine(models.Model):
                 if response == 0:
                     raise UserError("Biometric Device is Up/Reachable.")
                 else:
-                    raise UserError("Biometric Device is Down/Unreachable.") 
+                    raise UserError("Biometric Device is Down/Unreachable.")
             else:
                 prog = subprocess.run(["ping", machine_ip], stdout=subprocess.PIPE)
                 if 'unreachable' in str(prog):
                     raise UserError("Biometric Device is Down/Unreachable.")
                 else:
-                    raise UserError("Biometric Device is Up/Reachable.")  
-    
+                    raise UserError("Biometric Device is Up/Reachable.")
+
     @api.multi
     def clear_attendance(self):
         for info in self:
@@ -99,7 +100,7 @@ class ZkMachine(models.Model):
                 try:
                     zk = ZK(machine_ip, port = zk_port , timeout=timeout, password=0, force_udp=False, ommit_ping=False)
                 except NameError:
-                    raise UserError(_("Pyzk module not Found. Please install it with 'pip3 install pyzk'."))                
+                    raise UserError(_("Pyzk module not Found. Please install it with 'pip3 install pyzk'."))
                 conn = self.device_connect(zk)
                 if conn:
                     conn.enable_device()
@@ -129,7 +130,7 @@ class ZkMachine(models.Model):
         machines = self.env['zk.machine'].search([])
         for machine in machines :
             machine.download_attendance()
-        
+
     @api.multi
     def download_attendance(self):
         _logger.info("++++++++++++Cron Executed++++++++++++++++++++++")
